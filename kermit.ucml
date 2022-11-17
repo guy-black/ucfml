@@ -1,0 +1,410 @@
+-- ucml file for Kermit terminal
+
+Meta:
+    Title: "Kermit terminal emulator config"
+    About: "a simple config to test ucfml"
+    Upstream: "https://github.com/orhun/kermit#config-file"
+
+Body:
+    [ OptSection:
+          Title: "not so visible"
+          About: "these settings don't change the looks"
+          Options:
+              [Option:
+                   Title: "Locale"
+                   About: "There are two options, USA, or Australia."
+                   RefVar: loc
+                   Input:
+                       Dropdown:
+                           OptList:
+                               [ ->("US english", "en_US.UTF-8")
+                               , ("AUS englsh", "en_AU.UTF-8")]
+                           Required: True
+              ,Option:
+                   Title: "Word Character Exceptions"
+                   About:
+                       "The nonalphanumeric characters that will count as part of a word they are in"
+                   RefVar: charex
+                   Input:
+                       TextInput:
+                          Required: True
+                          Default: "-./?%&#_=+@~"
+              ,Option:
+                  Title: "Action key binding"
+                  About: "a key for actions"
+                  RefVar: actkey
+                  Input:
+                      RadioButton:
+                          OptList:
+                              [ ->("alt", "alt")
+                              , ("shift", "shift")]
+                          Required: True
+              ]
+    , OptSection:
+          Title: "very visible"
+          About: "these settings directly affect the look of the terminal"
+          Options:
+              [Option:
+                  Title: "Cursor Shape"
+                  About: "how to display the cursor"
+                  RefVar: curshape
+                  Input:
+                      Dropdown:
+                          OptList:
+                              [ ->("block █", "block")
+                              , ("ibeam |", "ibeam")
+                              , ("underline _", "underline")]
+                          Required: True
+              ,Option:
+                  Title: "Tab Position"
+                  About: "where to list tabs when you have multiple tabs open"
+                  RefVar: tabpos
+                  Input:
+                      RadioButton:
+                          OptList:
+                              [ ("top", "top")
+                              , ->("bottom", "bottom")]
+                          Required: True
+              ,Option:
+                  Title: "Terminal Font"
+                  About:
+                  RefVar: font
+                  Input:
+                      Compound:
+                          [ ( "fontfamily"
+                            , List:
+                                   Default: ["monospace"]
+                                   Input:
+                                      Dropdown:
+                                          OptList:
+                                              [ ("normal", "")
+                                              , ("sans", "sans")
+                                              , ("serif", "serif")
+                                              , ("monospace", "monospace")]
+                                          Required: False)
+                          , ( "style"
+                            , List:
+                                  Default: []
+                                  Input:
+                                      Dropdown:
+                                          OptList:
+                                              [ ("normal","")
+                                              , ("oblique","oblique")
+                                              , ("italic","italic")]
+                                          Required: False)
+                          , ( "weight"
+                            , List:
+                                  Default: []
+                                  Input:
+                                      Dropdown:
+                                          OptList:
+                                              [ ("ultra light","ultra-light")
+                                              , ("light","light")
+                                              , ("normal","")
+                                              , ("bold","bold")
+                                              , ("ultra bold","ultra-bold")
+                                              , ("heavy","heavy")]
+                                         Required: False)
+                          , ( "variants"
+                            , List:
+                                  Default: []
+                                  Input:
+                                      Dropdown:
+                                          OptList:
+                                              [ ("normal","")
+                                              , ("small caps","small-caps")]
+                                          Required: False)
+                          , ( "stretch style"
+                            , List:
+                                  Default: []
+                                  Input:
+                                      Dropdown:
+                                          OptList:
+                                              [ ("ultra condensed","ultra-condensed")
+                                              , ("extra condensed","extra-condesned")
+                                              , ("condensed","condensed")
+                                              , ("semi-condensed","semi-condensed")
+                                              , ("normal","")
+                                              , ("semi-expanded","semi-expanded")
+                                              , ("expanded","expanded")
+                                              , ("extra expanded","extra-expanded")
+                                              , ("ultra expanded","ultra-expanded")]
+                                          Required: False)
+                          , ( "size"
+                            , Number:
+                                  Set: Integer
+                                  Signed: False
+                                  Required: False
+                                  Default: 9)
+                          ]
+              ,Option:
+                  Title: "transparency"
+                  About: "a number from 0.0 to 1.0 with 0 being fully transparent and 1 being opaque"
+                  RefVar: "opacity"
+                  Input:
+                      Number:
+                          Set: Float
+                          Signed: False
+                          URange: 1
+                          Required: False
+                          Default: 0.96
+              ,Option:
+                  Title: "foreground color"
+                  About:
+                  RefVar: "fgcolor"
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xffffff
+              ,Option:
+                  Title: "bold foreground color"
+                  About:
+                  RefVar: "fgbold"
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xffffff
+              ,Option:
+                  Title: "Cursor color"
+                  About:
+                  RefVar: curCol
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x00cc00
+              ,Option:
+                  Title: "Cursor foreground"
+                  About:
+                  RefVar: "curfg"
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xefecf4
+              ,Option:
+                  Title: "background color"
+                  About:
+                  RefVar: bgcol
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x000000
+              ,Option:
+                  Title: "Color 0"
+                  About: "color Kermit will use for Black"
+                  RefVar: col0
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x3f3f3f
+              ,Option:
+                  Title: "Color 1"
+                  About: "color Kermit will use for red"
+                  RefVar: col1
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xcf0000
+              ,Option:
+                  Title: "Color 2"
+                  About: "color Kermit will use for Green"
+                  RefVar: col2
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xa8ff60
+              ,Option:
+                  Title: "Color 3"
+                  About: "color Kermit will use for yellow"
+                  RefVar: col3
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xf3f828
+              ,Option:
+                  Title: "Color 4"
+                  About: "color Kermit will use for blue"
+                  RefVar: col4
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x3c70a4
+              ,Option:
+                  Title: "Color 5"
+                  About: "color Kermit will use for purple"
+                  RefVar: col5
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xcc00ff
+              ,Option:
+                  Title: "Color 6"
+                  About: "color Kermit will use for cyan"
+                  RefVar: col6
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x3c70a4
+              ,Option:
+                  Title: "Color 7"
+                  About: "color Kermit will use for white"
+                  RefVar: col7
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xdcdccc
+              ,Option:
+                  Title: "Color 8"
+                  About: "color Kermit will use for bright black"
+                  RefVar: col8
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x808080
+              ,Option:
+                  Title: "Color 9"
+                  About: "color Kermit will use for bright red"
+                  RefVar: col9
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xcf0000
+              ,Option:
+                  Title: "Color 10"
+                  About: "color Kermit will use for bright green"
+                  RefVar: col10
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xa8ff60
+              ,Option:
+                  Title: "Color 11"
+                  About: "color Kermit will use for bright yellow"
+                  RefVar: col11
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x6b6b6b
+              ,Option:
+                  Title: "Color 12"
+                  About: "color Kermit will use for bright blue"
+                  RefVar: col12
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x3c70a4
+              ,Option:
+                  Title: "Color 13"
+                  About: "color Kermit will use for bright purple"
+                  RefVar: col13
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xcc00ff
+              ,Option:
+                  Title: "Color 14"
+                  About: "color Kermit will use for bright cyan"
+                  RefVar: col14
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0x3c70a4
+              ,Option:
+                  Title: "Color 15"
+                  About: "color Kermit will use for bright white"
+                  RefVar: col15
+                  Input:
+                      Number:
+                          Set: Hex
+                          Signed: False
+                          URange: 0xffffff
+                          Required: True
+                          Default: 0xdcdccc
+              ]
+    , Option:
+          Title: "Shortcuts"
+          About: "hotkeys, the text they expand to, and whether to run or paste it"
+          RefVar: hotkeys
+          Input:
+              List:
+                  Input:
+                      Compound:
+                          [ ( "insert or execute the bound text"
+                            , RadioButton:
+                                  OptList:
+                                      [ ("insert", "bind")
+                                      , ("execute", "bindx")
+                                      ]
+                                  Required: True)
+                          , ( "binding key"
+                            , TextInput:
+                                  Required: True
+                                  MinLen: 1
+                                  MaxLen: 1)
+                          , ( "text to expand to"
+                            , TextInput:
+                                  Required: True
+                                  MinLen: 1)
+                          ]
+                  Default: []
+
+Template:
