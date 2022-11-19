@@ -30,9 +30,11 @@ Body:
                   Default: "-./?%&#_=+@~"
                   Validator:
                     [ MustNot:
-                        RegExp:
-                          Source: $charex
-                          Regex: ****TODO****
+                        Condition:
+                          RegExp:
+                            Source: $charex
+                            Regex: "/([A-Z]|[a-z]|[0-9]|\s)/"
+                        Hint: "This should not contain any alphanumeric or whitespace characters"
                     ]
           ,Option:
               Title: "Action key binding"
@@ -137,10 +139,14 @@ Body:
                           Required: False)
                 , ( "size"
                   , Number:
-                      Set: Integer
+                      Float: False
                       Signed: False
+                      LRange: 0
+                      URange:
+                      Base:
                       Required: False
-                      Default: 9)
+                      Default: 9
+                      Validator: )
                 ]
         , Option:
             Title: "transparency"
@@ -148,97 +154,123 @@ Body:
             RefVar: "opacity"
             Input:
               Number:
-                Set: Float
+                Float: True
                 Signed: False
+                LRange: 0
                 URange: 1
+                Base:
                 Required: False
                 Default: 0.96
+                Validator:
         , Option:
             Title: "foreground color"
             About:
             RefVar: "fgcolor"
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xffffff
+                Validator:
         , Option:
             Title: "bold foreground color"
             About:
             RefVar: "fgbold"
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xffffff
+                Validator:
         , Option:
             Title: "Cursor color"
             About:
             RefVar: curCol
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x00cc00
+                Validator:
         , Option:
             Title: "Cursor foreground"
             About:
             RefVar: "curfg"
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xefecf4
+                Validator:
         , Option:
             Title: "background color"
             About:
             RefVar: bgcol
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x000000
+                Validator:
         , Option:
             Title: "Color 0"
             About: "color Kermit will use for Black"
             RefVar: col0
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x3f3f3f
+                Validator:
         , Option:
             Title: "Color 1"
             About: "color Kermit will use for red"
             RefVar: col1
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xcf0000
+                Validator:
         , Option:
             Title: "Color 2"
             About: "color Kermit will use for Green"
             RefVar: col2
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xa8ff60
         , Option:
@@ -247,143 +279,182 @@ Body:
             RefVar: col3
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xf3f828
+                Validator
         , Option:
             Title: "Color 4"
             About: "color Kermit will use for blue"
             RefVar: col4
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x3c70a4
+                Validator:
         , Option:
             Title: "Color 5"
             About: "color Kermit will use for purple"
             RefVar: col5
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xcc00ff
+                Validator:
         , Option:
             Title: "Color 6"
             About: "color Kermit will use for cyan"
             RefVar: col6
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x3c70a4
+                Validator:
         , Option:
             Title: "Color 7"
             About: "color Kermit will use for white"
             RefVar: col7
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xdcdccc
+                Validator:
         , Option:
             Title: "Color 8"
             About: "color Kermit will use for bright black"
             RefVar: col8
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x808080
+                Validator:
         , Option:
             Title: "Color 9"
             About: "color Kermit will use for bright red"
             RefVar: col9
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xcf0000
+                Validator:
         , Option:
             Title: "Color 10"
             About: "color Kermit will use for bright green"
             RefVar: col10
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xa8ff60
+                Validator:
         , Option:
             Title: "Color 11"
             About: "color Kermit will use for bright yellow"
             RefVar: col11
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x6b6b6b
+                Validator:
         , Option:
             Title: "Color 12"
             About: "color Kermit will use for bright blue"
             RefVar: col12
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x3c70a4
+                Validator:
         , Option:
             Title: "Color 13"
             About: "color Kermit will use for bright purple"
             RefVar: col13
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xcc00ff
+                Validator:
         , Option:
             Title: "Color 14"
             About: "color Kermit will use for bright cyan"
             RefVar: col14
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0x3c70a4
+                Validator:
         , Option:
             Title: "Color 15"
             About: "color Kermit will use for bright white"
             RefVar: col15
             Input:
               Number:
-                Set: Hex
+                Float: False
                 Signed: False
+                LRange: 0x000000
                 URange: 0xffffff
+                Base: Hex
                 Required: True
                 Default: 0xdcdccc
+                Validator:
         ]
   , Option:
       Title: "Shortcuts"
@@ -410,5 +481,38 @@ Body:
                     MinLen: 1)
               ]
           Default: []
+  ]
 
 Template:
+  [ ConFile:
+      FileName: "kermit.con"f
+      FilePath:
+        UnixStyle: "~/.config/"
+        WinStyle:
+      Lines:
+        [ "# kermit ~ terminal configuration file"
+        , "# auto generated from ucfml model"
+        , ""
+        , "# Locale (numeric)"
+        , Concat: [ "locale ", $loc]
+        , ""
+        , "# Word char exceptions"
+        , Concat: [ "char \"", $charex, "\""  -- todo fix this character escape stuff
+        . ""
+        , "# Action key binding (alt/shift)"
+        , Concat: [ "key ", $actkey]
+        , ""
+        , "# Cursor shape (block/ibeam/underline)"
+        , Concat: [ "cursor_shape ", $curshape]
+        , ""
+        , "# Custom command key bindings"
+        , "# bind/bindx [KEY]~"[COMMAND]""
+        , "# bindx f~"df -h""
+        , Inset:
+            ForEach:
+              Label: htky
+              Input: $hotkeys
+              NewVal:
+        ]
+
+  ]

@@ -379,10 +379,13 @@ How if an expression has variables that haven't been assigned yet then the outpu
 
 ### Validator tags
 
-The `Validator` subtag in `Number` and `TextInput` takes a list of subtags `MustBe` or `MustNot`, which each take a bool value, either directly or from `BoolExpr`, `BoolLog`, or `RegExp`
+The `Validator` subtag in `Number` and `TextInput` takes a list of subtags `MustBe` or `MustNot`, which each take two subtags
+
+   1. `Condition` takes a bool value, either directly or from `BoolExpr`, `BoolLog`, or `RegExp`
+   2. `Hint` takes a text value to show the user if the validator fails to help them fix it
 
 Example usage
-An option with the `refVar` of "user" with a compound input combining a `Number` labeled "id" and a `TextInput` labeled "name" where "id" must be divisible by 6 but can't be 18, and name must be all lower case letters.
+An option with the `refVar` of "user" with a compound input combining a `Number` labeled "id" and a `TextInput` labeled "name" where "id" must be divisible by 6 but can't be 18, and name must not start with a lower case letter.
 ```
 Option:
   Title: "user info"
@@ -398,9 +401,11 @@ Option:
             Default:
             Validator:
               [ MustNot:
-                  RegExp:
-                    Source: $user."name"
-                    Regex: "/([^a-z])/"
+                  Condition:
+                    RegExp:
+                      Source: $user."name"
+                      Regex: "/([^a-z])/"
+                  Hint: "name must not start with a lower case letter"
               ])
       , ( "id"
         , Number:
@@ -413,19 +418,23 @@ Option:
             Default:
             Validator
               [ MustBe:
-                  BoolExpr:
-                    Left:
-                      Expr:
-                        Left: $user."id"
-                        Operator: %
-                        Right: 6
-                    Comparison: =
-                    Right: 0
+                  Condition:
+                    BoolExpr:
+                      Left:
+                        Expr:
+                          Left: $user."id"
+                          Operator: %
+                          Right: 6
+                      Comparison: =
+                      Right: 0
+                  Hint: "id must be divisible by 6"
               , MustNot:
-                  BoolExpr:
-                    Left: $user."id"
-                    Comparison: =
-                    Right: 18
+                  Condition:
+                    BoolExpr:
+                      Left: $user."id"
+                      Comparison: =
+                      Right: 18
+                  Hint: "id must not be 18"
               ])
       ]
 ```
