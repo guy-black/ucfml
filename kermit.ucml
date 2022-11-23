@@ -84,7 +84,7 @@ Body:
                       Input:
                         Dropdown:
                           OptList:
-                            [ ("normal", "")
+                            [ ("normal", "normal")
                             , ("sans", "sans")
                             , ("serif", "serif")
                             , ("monospace", "monospace")]
@@ -151,7 +151,7 @@ Body:
         , Option:
             Title: "transparency"
             About: "a number from 0.0 to 1.0 with 0 being fully transparent and 1 being opaque"
-            RefVar: "opacity"
+            RefVar: opacity
             Input:
               Number:
                 Float: True
@@ -165,7 +165,7 @@ Body:
         , Option:
             Title: "foreground color"
             About:
-            RefVar: "fgcolor"
+            RefVar: fgcolor
             Input:
               Number:
                 Float: False
@@ -179,7 +179,7 @@ Body:
         , Option:
             Title: "bold foreground color"
             About:
-            RefVar: "fgbold"
+            RefVar: fgbold
             Input:
               Number:
                 Float: False
@@ -207,7 +207,7 @@ Body:
         , Option:
             Title: "Cursor foreground"
             About:
-            RefVar: "curfg"
+            RefVar: curfg
             Input:
               Number:
                 Float: False
@@ -464,7 +464,7 @@ Body:
         List:
           Input:
             Compound:
-              [ ( "insert or execute the bound text"
+              [ ( "insert or execute"
                 , RadioButton:
                     OptList:
                       [ ("insert", "bind")
@@ -497,7 +497,7 @@ Template:
         , Concat: [ "locale ", $loc]
         , ""
         , "# Word char exceptions"
-        , Concat: [ "char \"", $charex, "\""  -- todo fix this character escape stuff
+        , Concat: [ "char \"", $charex, "\""]
         . ""
         , "# Action key binding (alt/shift)"
         , Concat: [ "key ", $actkey]
@@ -506,13 +506,77 @@ Template:
         , Concat: [ "cursor_shape ", $curshape]
         , ""
         , "# Custom command key bindings"
-        , "# bind/bindx [KEY]~"[COMMAND]""
-        , "# bindx f~"df -h""
+        , "# bind/bindx [KEY]~\"[COMMAND]\""
+        , "# bindx f~\"df -h\""
         , Inset:
             ForEach:
               Label: htky
               Input: $hotkeys
               NewVal:
+                Concat:
+                  [ $htky."insert or execute"
+                  , " "
+                  , $htky."binding key"
+                  , "~\""
+                  , $htky."text to expand to"
+                  , "\"" ]
+        , ""
+        , "# Tab position (top/bottom)"
+        , Concat: [ "tab ", $tabpos]
+        , ""
+        , "Terminal font"
+        , Concat:
+            [ "font "
+            , Inset:
+                ForEach:
+                  Label: fntfam
+                  Input: $font."fontfamily"
+                  NewVal:
+                    Concat: [ $fntfam, ","]
+            , " "
+            , Inset:
+                ForEaach:
+                  Label: style
+                  Input:
+                    [ Inset: $font."style"
+                    , Inset: $font."weight"
+                    , Inset: $font."variants"
+                    , Inset: $font."stretch style" ]
+                  NewVal:
+                    Concat: [ $style, " "]
+            , $font."size"
+            ]
+        , ""
+        , "# Terminal transparency"
+        , Concat: [ "opacity ", $opacity]
+        , ""
+        , "# Foreground color"
+        , Concat: [ "foreground        ", $fgcolor]
+        , Concat: [ "foreground_bold   ", $fgbold]
+        , ""
+        , "# Cursor color"
+        , Concat: [ "cursor            ", $curcol]
+        , Concat: [ "cursor_foreground ", $curfg]
+        , ""
+        , "# Background color"
+        , Concat: [ "background        ", $bgcol]
+        , ""
+        , "# Color palette (16)"
+        , Concat: [ "color0  ", $col0]
+        , Concat: [ "color1  ", $col1]
+        , Concat: [ "color2  ", $col2]
+        , Concat: [ "color3  ", $col3]
+        , Concat: [ "color4  ", $col4]
+        , Concat: [ "color5  ", $col5]
+        , Concat: [ "color6  ", $col6]
+        , Concat: [ "color7  ", $col7]
+        , Concat: [ "color8  ", $col8]
+        , Concat: [ "color9  ", $col9]
+        , Concat: [ "color10  ", $col10]
+        , Concat: [ "color11  ", $col11]
+        , Concat: [ "color12  ", $col12]
+        , Concat: [ "color13  ", $col13]
+        , Concat: [ "color14  ", $col14]
+        , Concat: [ "color15  ", $col15]
         ]
-
   ]
