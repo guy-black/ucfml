@@ -1,1 +1,2 @@
 move concat from special operations to expressions
+add intersperse text option on concat
