@@ -139,9 +139,10 @@ There are 7 input tags available to use, 5 primary input types and 2 modifiers
       ]
     Required: True
   ```
-- `Checkbox Takes two subtags
+- `Checkbox` Takes two subtags
   1. `OptList` takes a list of tuples containing a string of text to label the choice, and the actual value. Tuples may be prefaced with `->` to indicate that it should be selected by default
-  2. `Required` takes a `True` or `False` if a value needs to be picked to generate a valid file in the end
+  2. `MinRequired` takes a number for the minimum amount of options that must be selected to make a valid file or may be left blank for no minimum
+  3. `MaxAllowed` takes a number or the max amount of options that may be selected or left blank for no max
 
   Example usage:
   ```
@@ -151,7 +152,8 @@ There are 7 input tags available to use, 5 primary input types and 2 modifiers
       , ->("Choice2 label", "choice2value") -- this choice will be preselected by default
       , ->("Choice3 label", "choice3value") -- this choice will be preselected by default
       ]
-    Required: True
+    MinRequired: 1
+    MaxRequired:
   ```
 - `Number` takes 8 subtags
   1. `Float` takes a boolean, `True` if this is a floating point number, or `False` if this is an integer
