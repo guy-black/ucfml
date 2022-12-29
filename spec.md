@@ -254,7 +254,39 @@ There are 7 input tags available to use, 5 primary input types and 2 modifiers
               Validator:)
         ]
   ```
+
+### Template tags
+
+The `Template` tag takes a list of `ConFile` subtags, one for each file to be generated.
+
+Each `ConFile` tag takes 3 subtags.
+
+  1. `FileName` takes a text value for the default file name for the file to be generated, or may be left blank for no default file name
+  2. `FilePath` takes two subtags
+    - `UnixStyle` takes a text value for a unix style file path of where the file should be saved by default.  May be left blank for no default
+    - `WinStyle` takes a text value for a windows style file path of where the file should be saved by default.  May be left blank for no default
+  3. `Lines` takes a list of text values to be written out to to the output file, in the order they should be written in.
+
+Example
+output a file named "simpledoc.md" that writes the values in an option with the `RefVar`s of "title" and "body"
+```
+Template:
+  [ ConFile:
+      FileName: "simpledoc.md"
+      FilePath:
+        UnixStyle:
+        WinStyle:
+      Lines:
+        [ ""
+        , Concat: ["#" , $title]
+        , $body
+        ]
+  ]
+```
+
 ### Expression tags
+
+Note if an expression has variables that haven't been assigned yet then the output will also be not assigned yet
 
 Expressions will use special values called `Operator`s, `Comparison`s, and `Gates`
 
@@ -305,9 +337,11 @@ see also, this table
 |True |False|False|False|True |True |False|False|True |True |False|False|True |True |False|False|True |True |
 |True |True |False|True |False|True |False|True |False|True |False|True |False|True |False|True |False|True |
 
-There are 5 types of expressions; `Expr` for expressions from 2 numbers to 1 number, `BoolExpr` for expressions from 2 numbers to a bool, `BoolLog` for expressions from 2 bools to a bool, `RegExp` for expressions from a text to a bool, and `SedExp` for expressiosn from a text to a text.
+***deletethis**** `Expr` for expressions from 2 numbers to 1 number, `BoolExpr` for expressions from 2 numbers to a bool, `BoolLog` for expressions from 2 bools to a bool, `RegExp` for expressions from a text to a bool, and `SedExp` for expressiosn from a text to a text.
 
-How if an expression has variables that haven't been assigned yet then the output will also be not assigned yet
+There are four main groups of expression types based on whether they resolve to a number, bool, text., or list of value.
+
+#### Expressions that resolve to numbers
 
 `Expr` takes 3 subtags and resolves to a new number.  An `Expr` can be given as a value to any tag that takes a number value
 
@@ -323,6 +357,21 @@ How if an expression has variables that haven't been assigned yet then the outpu
     Operator: +
     Right: $boz
   ```
+
+`Length` takes only one value that is either a text value or a List of values, and resolves to the length of that value
+
+  Example usage:
+  ```
+  Length: "a text value" -- resolves to 12
+  Length:
+    [ "a"
+    , "list"
+    , "of"
+    , "values"
+    ] -- resolves to 4
+  ```
+
+#### Expressions that resolve to boolean
 
 `BoolExpr` takes 3 subtags and resolves to a new bool.  A `BoolExpr` can be given as a value to any tag that takes a bool value
 
@@ -366,6 +415,9 @@ How if an expression has variables that haven't been assigned yet then the outpu
     Regex: "/(^[A-Z])/"
   ```
 
+
+#### Expressions that resolve to text
+
 `SedExp` takes 2 subtags and resolves to a new text.  A `SedExp` can be given as a value to any tag that takes a text value
 
   1. `Source` takes the string of text being modified
@@ -378,6 +430,114 @@ How if an expression has variables that haven't been assigned yet then the outpu
     Source: $startcmds
     SedCmd: "s/ +/ /g"
   ```
+
+`Concat` takes a list of text values and resolves to the combined text value
+
+Example usage
+a `Lines` tag with a list of two text values, one has the value of the option with `RefVar` of "width" embedded, and the other with the value of "height"
+```
+Lines:
+  [ Concat: ["width: ", $width," pixels"]
+  , Concat: ["height: ", $height, " pixels"]
+  ]
+```
+
+#### Expressions that resolve to a list of values
+
+`Repeat` can be used anywhere that expects a list giving a list of a given length of a given value and takes two subtags
+  1. `Len` takes a number value for how many of `Val` to have in the list
+  2. `Val` takes any value to fill the list with
+
+Example usage
+A `Default` tag for a `List` input that takes a list of the word "yes" 5 times
+```
+Default:
+  Repeat:
+    Len: 5
+    Val: "yes"
+```
+
+`Inset` can be used inside any list.  It takes a list value, and splits the list it is used inside and puts it back together with the given list value inside.
+
+Example usage 1
+Concatenating multiple lists together
+```
+Lines:
+  [ Inset: $listone
+  , Inset: $listtwo]
+```
+Example usage 2
+Inserting a list of values into a list a certain point
+```
+Lines:
+  [ "user names:"
+  , Inset: $usernames
+  , "user ids"
+  , Inset: $userids ]
+```
+
+`Reverse` reverses a list.  It can be used anywhere a list is expected, and takes one list value
+Example usage:
+```
+Lines:
+  Reverse:
+    [ "Third"
+    , "Second"
+    , "First" ]
+```
+
+`ForEach can be used anywhere a list is expected to modify the values of a list before using it, it takes 3 subtags:
+  1. `Label` will be used similarly to `RefVar` to refer to each value in the list given in the final value
+  2. `Input` will takes a list of values to be modified
+  3. `NewVal` will take the value or tag to be generated from the input value.  `$<Label>` will reference the list value here
+
+Example usage 1
+Take a list of number values and generate a list of the squares of all the number values
+```
+ForEach:
+  Label: val
+  Input: $listOfNumbers
+  NewVal:
+    Expr:
+      Left: $val
+      Operator: ^
+      Right: 2
+```
+
+Example usage 2
+Take a list of users and create an `OptSection` with `Options` for each one
+```
+OptSection:
+  Title: "user info"
+  About: "info for all the previously listed users"
+  Options:
+    ForEach:
+      Label: name
+      Input: $ListOfNames
+      NewVal:
+        Option:
+          Title: $name
+          About:
+            Concat: [ "Information about ", $name]
+          RefVar:
+            Concat: [ $name, "info"]
+          Input:
+            TextInput:
+              MinLn:
+              MaxLn:
+              Required: False
+              Default:
+              Validator:
+```
+The values for the generated options can then be accessed with
+```
+ForEach:
+  Label: name
+  Input: $ListOfNames
+  NewVal: $(Concat: [$name, "info"])
+```
+
+
 
 ### Validator tags
 
@@ -439,145 +599,6 @@ Option:
                   Hint: "id must not be 18"
               ])
       ]
-```
-
-### Template tags
-
-The `Template` tag takes a list of `ConFile` subtags, one for each file to be generated.
-
-Each `ConFile` tag takes 3 subtags.
-
-  1. `FileName` takes a text value for the default file name for the file to be generated, or may be left blank for no default file name
-  2. `FilePath` takes two subtags
-    - `UnixStyle` takes a text value for a unix style file path of where the file should be saved by default.  May be left blank for no default
-    - `WinStyle` takes a text value for a windows style file path of where the file should be saved by default.  May be left blank for no default
-  3. `Lines` takes a list of text values to be written out to to the output file, in the order they should be written in.
-
-Example
-output a file named "simpledoc.md" that writes the values in an option with the `RefVar`s of "title" and "body"
-```
-Template:
-  [ ConFile:
-      FileName: "simpledoc.md"
-      FilePath:
-        UnixStyle:
-        WinStyle:
-      Lines:
-        [ ""
-        , "#" ++ $title
-        , $body
-        ]
-  ]
-```
-
-### Special Operators
-
-#### Text Concatenation
-
-Concat can
-
-Example usage
-a `Lines` tag with a list of two text values, one has the value of the option with `RefVar` of "width" embedded, and the other with the value of "height"
-```
-Lines:
-  [ Concat: ["width: ", $width," pixels"]
-  , Concat: ["height: ", $height, " pixels"]
-  ]
-```
-
-#### List operations
-
-There are 4 special operations that can be done on in or with lists
-
-1. `Repeat` can be used anywhere that expects a list giving a list of a given length of a given value and takes two subtags
-  1. `Len` takes a number value for how many of `Val` to have in the list
-  2. `Val` takes any value to fill the list with
-
-  Example usage
-  A `Default` tag for a `List` input that takes a list of the word "yes" 5 times
-  ```
-  Default:
-    Repeat:
-      Len: 5
-      Val: "yes"
-  ```
-2. `Inset` can be used inside any list.  It takes a list value, and splits the list it is used inside and puts it back together with the given list value inside.
-  Example usage 1
-  Concatenating multiple lists together
-  ```
-  Lines:
-    [ Inset: $listone
-    , Inset: $listtwo]
-  ```
-  Example usage 2
-  Inserting a list of values into a list a certain point
-  ```
-  Lines:
-    [ "user names:"
-    , Inset: $usernames
-    , "user ids"
-    , Inset: $userids ]
-  ```
-
-3. `Reverse` reverses a list.  It can be used anywhere a list is expected, and takes one list value
-Example usage:
-```
-Lines:
-  Reverse:
-    [ "Third"
-    , "Second"
-    , "First" ]
-```
-
-4. `ForEach can be used anywhere a list is expected to modify the values of a list before using it, it takes 3 subtags:
-  1. `Label` will be used similarly to `RefVar` to refer to each value in the list given in the final value
-  2. `Input` will takes a list of values to be modified
-  3. `NewVal` will take the value or tag to be generated from the input value.  `$<Label>` will reference the list value here
-
-Example usage 1
-Take a list of number values and generate a list of the squares of all the number values
-```
-ForEach:
-  Label: val
-  Input: $listOfNumbers
-  NewVal:
-    Expr:
-      Left: $val
-      Operator: ^
-      Right: 2
-```
-
-Example usage 2
-Take a list of users and create a fill an `OptSection` with `Options` for each one
-```
-OptSection:
-  Title: "user info"
-  About: "info for all the previously listed users"
-  Options:
-    ForEach:
-      Label: name
-      Input: $ListOfNames
-      NewVal:
-        Option:
-          Title: $name
-          About:
-            Concat: [ "Information about ", $name]
-          RefVar:
-            Concat: [ $name, "info"]
-          Input:
-            TextInput:
-              MinLn:
-              MaxLn:
-              Required: False
-              Default:
-              Validator:
-```
-The values for the generated options can then be accessed with
-```
-ForEach:
-  Label: name
-  Input: $ListOfNames
-  NewVal: $(Concat: [$name, "info"])
 ```
 
 ### Conditionals

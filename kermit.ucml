@@ -4,6 +4,7 @@ Meta:
   Title: "Kermit terminal emulator config"
   About: "a simple config to test ucfml"
   Upstream: "https://github.com/orhun/kermit#config-file"
+  Author: "github.com/guy-black"
 
 Body:
   [ OptSection:
