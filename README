@@ -1,0 +1,7 @@
+this repository will hold the spec and reference programs for UCFML.
+
+UCFML is language for modeling any possibly conceivable collection of adjustable options, and a template to be filled in based on those options with the goal of makeing a graphical settings menu for any program without making any changes to that program
+
+currently a work in progress and no where near presentable yet
+
+my work (also in progress and not very presentable yet) on the refernce implementation can be found in the menu-matey repo
