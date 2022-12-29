@@ -50,6 +50,7 @@ Meta takes 3 subtags that are mostly self explanatory
 1. `Title` takes a string of text to be the title of this UCFML form
 2. `About` takes a text describing the UCFML form
 3. `UpstreamDocs` takes a link that should lead to an upstream source of documentation about the file(s) this UCFML form is generating
+4. `Author` takes a text naming the author of the file along with contact information
 
 Example Usage:
 ```
