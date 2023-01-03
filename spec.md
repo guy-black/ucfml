@@ -604,7 +604,7 @@ Option:
 
 ### Conditionals
 
-Conditionals may be used anywhere within a `ucfml` file, wheneve the correct value or tag is dependent on another value.  There is `Cond` for a single determined value and `CondL` to generate a list of values.  They both take a single value, a list of tuples of `Bool` and the value to resolve to if the Bool is true.  `Cond` will resolve to the first value with Bool of True.  `CondL` will resolve to a list of all values paired with a Bool of True
+Conditionals may be used anywhere within a `ucfml` file, wheneve the correct value or tag is dependent on another value.  There is `Cond` for a single determined value and `CondL` to generate a list of values.  They both take a single value, a list of tuples of `Bool` and the value to resolve to if the Bool is true.  `Cond` will resolve to the first value with Bool of True, if no values are True then no value will be picked and the tag will this is a value to will be considered unassigned.  `CondL` will resolve to a list of all values paired with a Bool of True, or an empty list if there are no values paired with True.
 
 Example usage 1
 A Cond that will resolve down to a single text value of "Kid", "Teen", or "Adult" based on the value of an `Option` with a `refVar` of "age"
