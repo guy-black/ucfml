@@ -43,6 +43,16 @@ Body: <body tags here>
 Template: <template tags here>
 ```
 
+In addition to the three main sections of a UCFML model there is also the `Define:` tag which can be used to define global constants for use through out the model.  Define takes a string of characters, followed by an equal sign, followed by the ucfml value it is.
+
+Example Usage:
+```
+Define: PI=3.14159
+Define: THEME="dark mode"
+```
+
+
+
 ### Meta tags
 
 Meta takes 3 subtags that are mostly self explanatory
@@ -604,7 +614,7 @@ Option:
 
 ### Conditionals
 
-Conditionals may be used anywhere within a `ucfml` file, wheneve the correct value or tag is dependent on another value.  There is `Cond` for a single determined value and `CondL` to generate a list of values.  They both take a single value, a list of tuples of `Bool` and the value to resolve to if the Bool is true.  `Cond` will resolve to the first value with Bool of True, if no values are True then no value will be picked and the tag will this is a value to will be considered unassigned.  `CondL` will resolve to a list of all values paired with a Bool of True, or an empty list if there are no values paired with True.
+Conditionals may be used anywhere within a `Meta:`, `Body:`, or `Template:` tag or their subtags, wheneve the correct value or tag is dependent on another value.  There is `Cond` for a single determined value and `CondL` to generate a list of values.  They both take a single value, a list of tuples of `Bool` and the value to resolve to if the Bool is true.  `Cond` will resolve to the first value with Bool of True, if no values are True then no value will be picked and the tag will this is a value to will be considered unassigned.  `CondL` will resolve to a list of all values paired with a Bool of True, or an empty list if there are no values paired with True.
 
 Example usage 1
 A Cond that will resolve down to a single text value of "Kid", "Teen", or "Adult" based on the value of an `Option` with a `refVar` of "age"
