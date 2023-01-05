@@ -12,6 +12,7 @@ I will consider the goal of creating a GUI for any configuration file for any pr
 ## Syntax
 
 With the exception of comments the entire syntax  will be written in a purely declarative `Tag: Value` format.  A value can be another `Tag` or it can be a Number, Text, a Boolean, an Operator, Comparison, Gate, a tuple of values, or a list of values.  Every `Tag` either takes a single `Value`, or several `SubTag`s that can each as well either take a single `Value` or more `SubTag`s.  There are 8 types of tags: Top Layer, Meta, Body, Input, Template, Expression, Validator, Special Operators, and Conditionals.
+If the value for a tag is a simple base value (ie. a literal number, text, bool, etc) then it may be written either on the same line directly following the `:` or on the next line two columns over from the start of the tag, else the value must be written on the next line two columns over.  Allowing minification or obfuscation hinders the goal of making UCFML accessible and understandable by any one regardless of their experience or comfort with programming.
 In order to keep the language really easy to learn I wanted the language to be verbose without being noisey.  Writing a `ucfml` file shouldn't feel like invoking an arcane old spell word for word to do the right thing, but rather like explaining to your elderly relative how install updates to their computer.
 
 Comments will be the same as in Haskell or Elm:
