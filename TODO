@@ -1,1 +1,39 @@
+Constants:
+  pi ::= 3.14 -- $pi is the number 3.14
+  pi' ::= "3.14" --$pi' is the text value of "3.14"
+  list_pi ::=  -- $list_pi is a list of number values
+    [ 1
+    , 4
+    , 1
+    , 5
+    , 9
+    ]
+  list_pi' ::= -- $list_pi' is a list of text values
+    [ "3"
+    , "."
+    , "1"
+    , "4"
+    ]
+  magic_op ::= * -- $magic_op is the multiplication operator
+  width ::= 420 -- $width is the number 420
+  height ::= 69 -- $height is the number 69
+  area ::= -- $area is 420*69 or 28980
+    Expr:
+      Left: $width
+      Op : $magic_op
+      Right : $height
+  wrong_area ::= -- parse error because this has undefined variables
+    Expr:
+      Left: $some_other_width
+      Op: $what_op
+      Right: $literally_undefined
+  what_op ::= ^ -- $wrong area is still a parse error cause
+
+also make expample defined function that does something more complicated
+
+text manipulation?
+list manipulation?
+pseudo currying?
+
+
 clean up and make clearer
