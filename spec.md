@@ -1,4 +1,4 @@
-# Universal Config file modeling language
+ # Universal Config file modeling language
 
 ##  Goals and Motivation
 One of the common pain points of FOSS for casual computer users  that I'm seeking to mitigate here is the textual configuration file.  I have two main goals for this language beyond simply creating a GUI for any configuration file for any program:
@@ -28,15 +28,62 @@ lines -}
 There are 7 types of base values
 1. Text
 2. Number
-3. Boolean
+3. Bool
 4. Gates
 5. Operators
 6. Comparisons
 7. Base
 
+xx complex tags composed of subtags that in turn take either a base value or another complex one
+OptionTypes:
+1. OptSection:
+  - Title   :: Text
+  - About   :: Text
+  - Options :: [ Option | OptSection ]
+2. Option:
+  - Title :: Text
+  - About :: Text
+  - Input :: inputtags*
+InputTypes
+3. Dropdown:
+  - OptList  :: [ ( Text, abv*) ]
+  - Required :: Bool
+4. CheckBox:
+  - OptList     :: [ ( Text, abv*) ]
+  - Required    :: Bool
+  - MinRequired :: Number
+  - Maxrequired :: Number
+5. Radio:
+  - OptList  :: [ ( Text, abv*) ]
+  - Required :: Bool
+6. NumberInput:
+    Float     :: Bool
+    Signed    :: Bool
+    LRange    :: Number
+    URange    :: Number
+    Base      :: Base
+    Required  :: Bool
+    Default   :: Number
+    Validator :: Validator
+7. TextInput
+    MinLn     :: Number
+    MaxLn     :: Number
+    Required  :: Bool
+    Defualt   :: Text
+    Validator :: Validator
+8. ListInput
+9. CompoundInput
+10: Validator
+
+
+
 with two parameterized types
 1. List
 2. Tuples
+
+* inputtags ::= Dropdown | CheckBox | Radio | NumberInput | TextInput | ListInput InputTag | CompoundInput [ InputTag ]
+* abv = any base value type
+        Text | Number | Bool | Gate | Operator | Comparison | Base
 
 Values of any option may be acccesed by prefacing its `RefVar` value with a `$`.
 For options with a comound input, `$refvar` will bring a tuple of all values, or you can access a specific value with `$refvar.inputlabel`.
@@ -109,7 +156,7 @@ ftoc f ::=
 
 ### Meta tags
 
-Meta takes 3 subtags that are mostly self explanatory
+Meta takes 4 subtags that are mostly self explanatory
 
 1. `Title` takes a string of text to be the title of this UCFML form
 2. `About` takes a text describing the UCFML form
@@ -177,7 +224,7 @@ There are 7 input tags available to use, 5 primary input types and 2 modifiers
 #### Base input types
 
 - `Dropdown` Takes two subtags
-  1. `OptList` takes a list of tuples containing a string of text to label the choice, and the actual value.  One tuple may be prefaced with `->` to indicate that it should be selected by default
+  1. `OptList` takes a list of tuples containing a text to label the choice, and the actual value.  One tuple may be prefaced with `->` to indicate that it should be selected by default
   2. `Required` takes a `True` or `False` if a value needs to be picked to generate a valid file in the end
 
   Example usage:
@@ -242,7 +289,7 @@ There are 7 input tags available to use, 5 primary input types and 2 modifiers
     Required: False
     Default:
     Validator: <validator tag here>
-  ```
+
 - `TextInput` takes 5 subtags
   1. `MinLn` can take a positive number to indicate a minimum length the text must be for a valid input or left blank or set to 0 for no minimum
   2. `MaxLn` can take a positive number to indicate a maximum length the text must be for a valid input or left blank for no maximum
@@ -520,23 +567,25 @@ Default:
     Val: "yes"
 ```
 
-`Inset` can be used inside any list.  It takes a list value, and splits the list it is used inside and puts it back together with the given list value inside.
+`Combine` takes a list of lists and smashes them down to a single list
 
 Example usage 1
 Concatenating multiple lists together
 ```
 Lines:
-  [ Inset: $listone
-  , Inset: $listtwo]
+  Combine:
+    [ $listone
+    , $listtwo]
 ```
 Example usage 2
 Inserting a list of values into a list a certain point
 ```
 Lines:
-  [ "user names:"
-  , Inset: $usernames
-  , "user ids"
-  , Inset: $userids ]
+  Combine:
+    [ ["user names:"]
+    , $usernames
+    , ["user ids"]
+    , $userids ]
 ```
 
 `Reverse` reverses a list.  It can be used anywhere a list is expected, and takes one list value
