@@ -34,8 +34,12 @@ There are 7 types of base values
 6. Comparisons
 7. Base
 
+two parameterized types
+1. List
+2. Tuples
+
 xx complex tags composed of subtags that in turn take either a base value or another complex one
-OptionTypes:
+### Option Tags:
 1. OptSection:
   - Title   :: Text
   - About   :: Text
@@ -44,7 +48,7 @@ OptionTypes:
   - Title :: Text
   - About :: Text
   - Input :: inputtags*
-InputTypes
+### Input Tags
 3. Dropdown:
   - OptList  :: [ ( Text, abv*) ]
   - Required :: Bool
@@ -57,31 +61,53 @@ InputTypes
   - OptList  :: [ ( Text, abv*) ]
   - Required :: Bool
 6. NumberInput:
-    Float     :: Bool
-    Signed    :: Bool
-    LRange    :: Number
-    URange    :: Number
-    Base      :: Base
-    Required  :: Bool
-    Default   :: Number
-    Validator :: Validator
+  - Float     :: Bool
+  - Signed    :: Bool
+  - LRange    :: Number
+  - URange    :: Number
+  - Base      :: Base
+  - Required  :: Bool
+  - Default   :: Number
+  - Validator :: Validator
 7. TextInput
-    MinLn     :: Number
-    MaxLn     :: Number
-    Required  :: Bool
-    Defualt   :: Text
-    Validator :: Validator
+ -  MinLn     :: Number
+ -  MaxLn     :: Number
+ -  Required  :: Bool
+ -  Defualt   :: Text
+ -  Validator :: Validator
 8. ListInput
-9. CompoundInput
-10: Validator
+ -  MinLn   :: Number
+ -  MaxLn   :: Number
+ -  Default :: [ x ]
+ -  Input   :: inputtags (must generate value of type x)
+9. CompoundInput :: [ ( Text, inputtags) ]
+### Validator tags
+10. MustPass:
+ -  Condition :: Bool
+ -  Hint      :: Text
+11. MustFail:
+ -  Condition :: Bool
+ -  Hint      :: Text
+### Expression tags
+12. Expr
+13. Length
+14. BoolLog
+15. BoolExpr
+16. Regexp
+17. SedExpr
+18. Concat
+19. Repeat
+20. Combine
+21. Reverse
+22. ForEach
+### Conditional tags
+23. Cond
+24. CondL
+### Template tags
+24. ConFile
 
-
-
-with two parameterized types
-1. List
-2. Tuples
-
-* inputtags ::= Dropdown | CheckBox | Radio | NumberInput | TextInput | ListInput InputTag | CompoundInput [ InputTag ]
+* inputtags = any input tags
+        Dropdown | CheckBox | Radio | NumberInput | TextInput | ListInput InputTag | CompoundInput [ InputTag ]
 * abv = any base value type
         Text | Number | Bool | Gate | Operator | Comparison | Base
 
@@ -153,6 +179,35 @@ ftoc f ::=
         Operator: /
         Right: 9
 ```
+
+that function can later be used with the syntax of
+
+```
+ftoc: <farenheit temperature>
+```
+
+for a function with multiple arguments defined like
+
+```
+greater this that ::=
+  Cond:
+    [ (BoolExpr:
+         Left: $this
+         Comparison: >
+         Rith: $that
+      , $this)
+    , (True, $that)
+    ]
+```
+
+it can be called with this syntax
+
+```
+greater:
+  this: <first number>
+  that: <second number>
+```
+
 
 ### Meta tags
 
@@ -374,10 +429,9 @@ The `Template` tag takes a list of `ConFile` subtags, one for each file to be ge
 Each `ConFile` tag takes 3 subtags.
 
   1. `FileName` takes a text value for the default file name for the file to be generated, or may be left blank for no default file name
-  2. `FilePath` takes two subtags
-    - `UnixStyle` takes a text value for a unix style file path of where the file should be saved by default.  May be left blank for no default
-    - `WinStyle` takes a text value for a windows style file path of where the file should be saved by default.  May be left blank for no default
-  3. `Lines` takes a list of text values to be written out to to the output file, in the order they should be written in.
+  2. `NixPath` takes a text value for a unix style file path of where the file should be saved by default.  May be left blank for no default
+  3. `WinPath` takes a text value for a windows style file path of where the file should be saved by default.  May be left blank for no default
+  4. `Lines` takes a list of text values to be written out to to the output file, in the order they should be written in.
 
 Example
 output a file named "simpledoc.md" that writes the values in an option with the `RefVar`s of "title" and "body"
@@ -385,9 +439,8 @@ output a file named "simpledoc.md" that writes the values in an option with the 
 Template:
   [ ConFile:
       FileName: "simpledoc.md"
-      FilePath:
-        UnixStyle:
-        WinStyle:
+      NixPath:
+      WinPath:
       Lines:
         [ ""
         , Concat: ["#" , $title]
@@ -674,7 +727,7 @@ Option:
             Required: True
             Default:
             Validator:
-              [ MustNot:
+              [ MustFail:
                   Condition:
                     RegExp:
                       Source: $user."name"
@@ -691,7 +744,7 @@ Option:
             Required:True
             Default:
             Validator
-              [ MustBe:
+              [ MustPass:
                   Condition:
                     BoolExpr:
                       Left:
@@ -702,7 +755,7 @@ Option:
                       Comparison: =
                       Right: 0
                   Hint: "id must be divisible by 6"
-              , MustNot:
+              , MustFail:
                   Condition:
                     BoolExpr:
                       Left: $user."id"
